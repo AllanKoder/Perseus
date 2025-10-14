@@ -13,7 +13,7 @@ from perseus.cli.perseus_cli import PerseusCLI
 @click.option("--config", default=None, help="Path to YAML config file (default: perseus.yaml)")
 @click.pass_context
 def cli(ctx, config):
-    """Perseus CLI group (loads config once and shares it via click.Context.obj)."""
+    """Perseus CLI: Docs-as-code generator"""
     loader = ConfigLoader(path=config)
     cfg = loader.load()
     ctx.ensure_object(dict)
@@ -25,7 +25,8 @@ def cli(ctx, config):
 @click.option("--out", default=None, help="Output directory for generated docs")
 @click.option("--format", "-f", default=None, help="Output format: md or json")
 @click.option("--ext", default=None, help="Comma-separated source extensions to scan (e.g. .py,.js)")
-@click.option("--pdoc-ext", default=None, help="Extension for Perseus doc files (default .pdoc)")
+@click.option("--pdoc-ext", default=None, help="Extension for Perseus doc files (default .pdoc)")\
+# TODO: Watch mode
 @click.option("--watch", is_flag=True, default=False, help="Enable watch mode (not implemented in demo)")
 @click.pass_context
 def build(ctx, root, out, format, ext, pdoc_ext, watch):

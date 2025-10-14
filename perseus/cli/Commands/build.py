@@ -17,11 +17,16 @@ def find_source_files(root="."):
 @click.option("--root", default=".")
 @click.option("--out", default="docs/build")
 @click.option("--format", default="md")
-def build_cmd(root, out, format):
+@click.option("--ignore-dirs", default=None, help="Comma-separated directories to ignore")
+def build_cmd(root, out, format, ignore_dirs):
     ctx = PerseusContext()
     # gather all source files into one big text for code extraction heuristics
     full_text = []
+    ignore = set([s.strip() for s in (ignore_dirs or "").split(",") if s.strip()])
     for file in find_source_files(root):
+        # skip files that are inside ignored directories
+        if any(part in ignore for part in file.split(os.sep)):
+            continue
         try:
             with open(file, "r", encoding="utf-8") as fh:
                 full_text.append(fh.read())
@@ -30,6 +35,8 @@ def build_cmd(root, out, format):
     code_text = "\n\n".join(full_text)
 
     for file in find_source_files(root):
+        if any(part in ignore for part in file.split(os.sep)):
+            continue
         for block_text in scanner.scan_file(file):
             parsed = parser.parse_blocks([block_text], code_text=code_text)
             for b in parsed:

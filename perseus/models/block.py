@@ -1,15 +1,6 @@
 """Data model for a Pdoc block, implemented with Pydantic BaseModel."""
 from typing import Dict, List, Any, Optional
-try:
-    from pydantic import BaseModel, Field, validator
-except ImportError as e:
-    raise ImportError(
-        "Perseus requires pydantic. Install it with uv (recommended):\n"
-        "  uv add pydantic\n"
-        "  uv install\n"
-        "or with pip: pip install pydantic\n"
-    ) from e
-
+from pydantic import BaseModel, Field, validator
 
 class PdocBlock(BaseModel):
     id: str

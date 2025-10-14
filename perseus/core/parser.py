@@ -17,13 +17,16 @@ def extract_code_near(block_id: str, source_text: str, context_lines: int = 8) -
     m = pattern.search(source_text)
     if not m:
         return ""
-    start = max(0, source_text.rfind("\n", 0, m.start()) + 1)
-    # get a window of lines
+    # get a window of lines; be conservative about including preceding lines
     lines = source_text.splitlines()
     # find line index of matched line
     for idx, line in enumerate(lines):
         if m.group(1).strip() == line.strip():
-            s = max(0, idx - context_lines)
+            # Start at the def/class line itself. Include decorator lines immediately above it
+            s = idx
+            while s > 0 and lines[s - 1].lstrip().startswith("@"):
+                s -= 1
+            # End after a number of context lines to capture body; don't include arbitrary leading docstrings/YAML
             e = min(len(lines), idx + context_lines)
             return "\n".join(lines[s:e]) + "\n"
     return ""
