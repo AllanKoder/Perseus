@@ -1,0 +1,28 @@
+## Perseus Generated Documentation
+
+{% for id, block in blocks.items() %}
+### {{ id }}
+
+{{ block.intention }}
+
+{% if block.tickets %}
+#### Tickets
+{% for t in block.tickets %}- {{ t }}
+{% endfor %}
+{% endif %}
+
+{% if block.code_snippet %}
+#### Code
+```python
+{{ block.code_snippet }}
+```
+{% endif %}
+
+{% endfor %}
+
+---
+
+## Global Glossary
+{% for term, defn in glossary.items() %}
+- **{{ term }}**: {{ defn }}
+{% endfor %}
