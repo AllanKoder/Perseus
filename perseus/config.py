@@ -21,6 +21,9 @@ class ConfigData(BaseModel):
     watch: bool = Field(default=False)
     # list of directory names (or top-level relative paths) to ignore during scans
     ignore_dirs: List[str] = Field(default_factory=list)
+    # list of allowed/declared extra fields that may appear inside @pdoc blocks
+    # Any extra key present in a block must appear here or the build will fail.
+    required_extra_fields: List[str] = Field(default_factory=list)
 
     class Config:
         extra = "allow"

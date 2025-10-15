@@ -3,6 +3,8 @@ from typing import Dict, List, Any, Optional
 from pydantic import BaseModel, Field, validator
 
 class PdocBlock(BaseModel):
+    # Allow extra fields so we can validate them against global config later
+    model_config = {"extra": "allow"}
     id: str
     watch: bool = False
     code: bool = False
@@ -10,7 +12,7 @@ class PdocBlock(BaseModel):
     vocabulary: Dict[str, str] = Field(default_factory=dict)
     tags: List[str] = Field(default_factory=list)
     tickets: List[str] = Field(default_factory=list)
-    extra: Dict[str, Any] = Field(default_factory=dict)
+    # extras removed; additional fields should be declared in global config
     code_snippet: str = ""
 
     @validator("tickets", pre=True, each_item=False)
@@ -41,11 +43,10 @@ class PdocBlock(BaseModel):
 
     def to_dict(self):
         # Keep compatibility with the previous to_dict structure: include 'code' key containing the snippet
-        base = self.dict(exclude={})
+        # Use Pydantic v2 model_dump for serialization
+        base = self.model_dump(exclude={})
         # move code_snippet into 'code' key for backward compatibility
         base["code"] = base.pop("code_snippet", "")
-        # merge any extras stored in extra
-        extra = base.pop("extra", {}) or {}
-        base.update(extra)
+    # extras are validated against global config; nothing to merge here
         return base
 

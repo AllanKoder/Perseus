@@ -13,6 +13,7 @@ dependencies = [
   "pydantic>=2.0",
   "jinja2>=3.0",
   "pyyaml>=6.0",
+  "dependency-injector>=4.0",
 ]
 
 # Create a console script 'pers' that points to the CLI group in main.py

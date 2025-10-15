@@ -1,12 +1,14 @@
 """Thin entrypoint for Perseus CLI.
 
 This module intentionally contains minimal logic: configuration and CLI
-behavior are implemented in `perseus.config.ConfigData` / `ConfigLoader` and
-`perseus.cli.perseus_cli.PerseusCLI`.
 """
 import click
 from perseus.config import ConfigLoader
-from perseus.cli.perseus_cli import PerseusCLI
+from perseus.cli import perseus_service
+from perseus.cli.perseus_cli import build
+from dependency_injector import providers
+
+from perseus.di import Container
 
 
 @click.group()
@@ -19,38 +21,26 @@ def cli(ctx, config):
     ctx.ensure_object(dict)
     ctx.obj["config"] = cfg
 
+    # register configuration in a small DI container for downstream use
+    container = Container()
 
-@cli.command("build")
-@click.option("--root", default=None, help="Root directory to scan for source files")
-@click.option("--out", default=None, help="Output directory for generated docs")
-@click.option("--format", "-f", default=None, help="Output format: md or json")
-@click.option("--ext", default=None, help="Comma-separated source extensions to scan (e.g. .py,.js)")
-@click.option("--pdoc-ext", default=None, help="Extension for Perseus doc files (default .pdoc)")\
-# TODO: Watch mode
-@click.option("--watch", is_flag=True, default=False, help="Enable watch mode (not implemented in demo)")
-@click.pass_context
-def build(ctx, root, out, format, ext, pdoc_ext, watch):
-    cfg = ctx.obj.get("config")
-    # collect overrides
-    overrides = {}
-    if root:
-        overrides["root"] = root
-    if out:
-        overrides["out"] = out
-    if format:
-        overrides["format"] = format
-    if ext:
-        overrides["source_exts"] = [s.strip() for s in ext.split(",") if s.strip()]
-    if pdoc_ext:
-        overrides["pdoc_ext"] = pdoc_ext
-    if watch:
-        overrides["watch"] = True
+    # container.config expects a mapping-like object; pass the pydantic model
+    container.config.from_dict(cfg.model_dump())
 
-    merged = cfg.copy(update=overrides) if hasattr(cfg, "copy") else cfg
-    cli_obj = PerseusCLI(merged)
-    outpath = cli_obj.build()
-    click.echo(f"Built: {outpath}")
+    # Ensure the container constructs a PerseusService with the actual
+    # Pydantic ConfigData instance (not the raw dict from container.config).
+    # TODO: Look into override meaning
+    container.perseus_service.override(
+        providers.Factory(perseus_service.PerseusService, config=cfg)
+    )
 
+    # Wire the CLI module so injection decorators (Provide[...]) resolve to
+    # real objects at call time. Also keep the container in ctx as a fallback.
+    # TODO: Look into this
+    container.wire(modules=["perseus.cli.perseus_cli"])
+    ctx.obj["container"] = container
+
+cli.add_command(build)
 
 if __name__ == "__main__":
     cli()

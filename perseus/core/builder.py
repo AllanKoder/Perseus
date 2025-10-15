@@ -21,7 +21,7 @@ def build_docs(context, template_dir, out_dir, fmt="md"):
     elif fmt == "json":
         path = os.path.join(out_dir, "output.json")
         with open(path, "w", encoding="utf-8") as f:
-            json.dump({"blocks": context.to_serializable(), "glossary": context.glossary}, f, indent=2)
+            json.dump({"blocks": context.model_dump(), "glossary": context.glossary}, f, indent=2)
         return path
     else:
         raise ValueError("Unknown format: %r" % (fmt,))

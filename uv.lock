@@ -60,6 +60,47 @@ wheels = [
 ]
 
 [[package]]
+name = "dependency-injector"
+version = "4.48.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "typing-extensions", version = "4.13.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "typing-extensions", version = "4.15.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9' and python_full_version < '3.11'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/e3/a4/619df82de38ce6451cc1acb549237cbd9306c4bfbcec6e8e1fdbceb8c5f3/dependency_injector-4.48.2.tar.gz", hash = "sha256:9ce6089d75a5dd0b6191a243f41d2c2746802bb39550ad431242c15136fefd60", size = 1103335, upload-time = "2025-09-19T10:19:43.492Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/91/56/dce91cc7638a4be4d83e18d20edd3f9b295440b1897d972f7a8ce3ea240f/dependency_injector-4.48.2-cp310-abi3-macosx_11_0_arm64.whl", hash = "sha256:54d0178be10f17b768afb5c0ed1c5c565abaa2d097b2bc5a529a31c580613df2", size = 1755919, upload-time = "2025-09-19T10:18:53.97Z" },
+    { url = "https://files.pythonhosted.org/packages/67/80/c29f5cb5fd794ea453b240e6d6682a07cdc519a4bd76589c4b75a1bb7a91/dependency_injector-4.48.2-cp310-abi3-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl", hash = "sha256:12a15979fd534b728b3061c8aa52fd55adb77574758817daae9df8a1c2eb830b", size = 1855277, upload-time = "2025-09-19T10:18:55.911Z" },
+    { url = "https://files.pythonhosted.org/packages/79/fa/20f14684dfb822f4b72623d4c1250149ba2fcc95a831ae334605eff31b33/dependency_injector-4.48.2-cp310-abi3-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:85cdf4b423884d4a24a18b970abe73352fb210761302cd6b5ebc6e9a20dbe53f", size = 1760596, upload-time = "2025-09-19T10:18:57.636Z" },
+    { url = "https://files.pythonhosted.org/packages/1e/c0/06dddb1b21f64bd1e948244aed1743c8013ea7800fc6e3e470b0019dd93e/dependency_injector-4.48.2-cp310-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:a9b457b95a400b7a2de0978a55768cdd104bd265953bf0ed06e7f25d18f35ed2", size = 1742442, upload-time = "2025-09-19T10:18:59.041Z" },
+    { url = "https://files.pythonhosted.org/packages/63/23/32575e230f5baf8082eb776847756024441207eabbb03ada679c29061070/dependency_injector-4.48.2-cp310-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:417809f565c39800adb744d666dfe4d94eae510b73ec33f932d592415d7c46d0", size = 1842421, upload-time = "2025-09-19T10:19:01.446Z" },
+    { url = "https://files.pythonhosted.org/packages/3c/99/6595e8235d8e120129098d7a56b0491be313bab5415fc9d107ad1ae2a967/dependency_injector-4.48.2-cp310-abi3-win32.whl", hash = "sha256:f014aa7bab427932802d59967d9fe0863a0001db66446177dcc62e47f3a6b234", size = 1512262, upload-time = "2025-09-19T10:19:03.029Z" },
+    { url = "https://files.pythonhosted.org/packages/96/04/cf1d482d163bf8c7cfd886cb4cf8eed950b366c2723dea2b21874ef2201c/dependency_injector-4.48.2-cp310-abi3-win_amd64.whl", hash = "sha256:e3fcdeb8189f3e1f87fde9276061f8a6cc596c2fa139bc4b4d1f571035ebd645", size = 1640200, upload-time = "2025-09-19T10:19:04.549Z" },
+    { url = "https://files.pythonhosted.org/packages/b6/b7/513b29902b146a1b2f25684520937330e2bf9f6cb5af3037f037aa9c8995/dependency_injector-4.48.2-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:dd99287ef31fe41cc1fecd5336f10255f3aca3a6a64f3f8a9ac1f0d37e1a23f2", size = 1734141, upload-time = "2025-09-19T10:19:06.145Z" },
+    { url = "https://files.pythonhosted.org/packages/49/e9/726174b2bf98a0d5793d50b5a3b0b5089b03c4c05cde1f82011c75de0de6/dependency_injector-4.48.2-cp38-cp38-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:390c6d675eec5a515e1a617af1eb20fd2abf6a12b6b16b1635067b0c341aa602", size = 1862881, upload-time = "2025-09-19T10:19:07.66Z" },
+    { url = "https://files.pythonhosted.org/packages/46/49/df5403c8848d1bba636f4f015496bcd8bc2dffbdfe7945472eba33c727e0/dependency_injector-4.48.2-cp38-cp38-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:1d64c9d70a75120554e6451ab62a1baf4f80e0d8894f89e4fbd9da9e7ed60577", size = 1909914, upload-time = "2025-09-19T10:19:09.612Z" },
+    { url = "https://files.pythonhosted.org/packages/82/ec/7492dd7aa034f548ee4cfccea3e2b82e06814e1be119b55d4ae32349fbbf/dependency_injector-4.48.2-cp38-cp38-musllinux_1_2_aarch64.whl", hash = "sha256:20156ef8192780286600c760330d7d280aedf8154d667855efa8e3dcec3ad6dc", size = 1877107, upload-time = "2025-09-19T10:19:11.12Z" },
+    { url = "https://files.pythonhosted.org/packages/f3/68/9e770b36d1da0ceabac7fec7bf7125b24b44c1beffeb81a6d76495e74f2e/dependency_injector-4.48.2-cp38-cp38-musllinux_1_2_x86_64.whl", hash = "sha256:9822e112d73dec40d29b12aee1869587e45a6de9dd9a2f90b184d42b7cdcc5a0", size = 1917906, upload-time = "2025-09-19T10:19:12.63Z" },
+    { url = "https://files.pythonhosted.org/packages/34/d4/6e7db8460702255178423fba32e49977f63a63b42be5b7e075f0429edd91/dependency_injector-4.48.2-cp38-cp38-win32.whl", hash = "sha256:9747a8ef5939f54ec2437fde2d7bf593e63d09c7e9404753d81917ce6efa350d", size = 1575719, upload-time = "2025-09-19T10:19:14.128Z" },
+    { url = "https://files.pythonhosted.org/packages/01/10/b4df10827cbc974b4721f98a631dba031561932379ce688540c87747da34/dependency_injector-4.48.2-cp38-cp38-win_amd64.whl", hash = "sha256:e4f52d6c1ffb23b683babb5a544cd369967d0852b83f34611ec094a00ee6e078", size = 1739009, upload-time = "2025-09-19T10:19:15.692Z" },
+    { url = "https://files.pythonhosted.org/packages/16/e2/afa8c3bb94b724249636e8920b27982c415ee247fb921a60af2ea8915d68/dependency_injector-4.48.2-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:02618868c87e11b4a09ce49981faf340813726589e54d8f623094e144856d31c", size = 1871944, upload-time = "2025-09-19T10:19:17.267Z" },
+    { url = "https://files.pythonhosted.org/packages/12/77/a0d9a537459b2f0a2a62f018aa48e3e07c86ac32527384b0115c9d792ddf/dependency_injector-4.48.2-cp39-cp39-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:ec7166e70b8f0fcfd1259f22a6e85f58305736e760701fd48c767d398d154cc8", size = 1856264, upload-time = "2025-09-19T10:19:18.742Z" },
+    { url = "https://files.pythonhosted.org/packages/ef/54/611d438351da7e9231c7b43c41db47ea24be164627294a0dd1b9d94e263e/dependency_injector-4.48.2-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:65492bda0217c7fad304ce57be19711252f7440f8f72b77f01fc396148192360", size = 1971827, upload-time = "2025-09-19T10:19:20.226Z" },
+    { url = "https://files.pythonhosted.org/packages/d9/c5/c3f267b647efc95881fa69271a7b0182f43fccdab9b33c8adaf6121389cf/dependency_injector-4.48.2-cp39-cp39-musllinux_1_2_aarch64.whl", hash = "sha256:9c22aba674451f45993b026de83e8a4854d7927589158fe85d063dcda7f49141", size = 1853675, upload-time = "2025-09-19T10:19:21.92Z" },
+    { url = "https://files.pythonhosted.org/packages/a4/39/5a45099494fe4b608f716f6abeaa8109aa8bc300bcc78cbe126a36a72ecb/dependency_injector-4.48.2-cp39-cp39-musllinux_1_2_x86_64.whl", hash = "sha256:d860c71bc3245046214b77da38451edbfa52fd91399cd07fe325227d5cf98eec", size = 1981054, upload-time = "2025-09-19T10:19:23.562Z" },
+    { url = "https://files.pythonhosted.org/packages/f8/96/4f749884af67173336a28e03dfd1bd77e05a7a9bad27bfc5e2aea10e2da7/dependency_injector-4.48.2-cp39-cp39-win32.whl", hash = "sha256:8691d46941f222d625c19eaa455d06d1b7d8c05f145e4f35a66b0ccead2719f3", size = 1566898, upload-time = "2025-09-19T10:19:25.123Z" },
+    { url = "https://files.pythonhosted.org/packages/dd/dd/3a99e9e4ceb2d6d2cca9052da2b939220726e47cef64363c2f14b720cd45/dependency_injector-4.48.2-cp39-cp39-win_amd64.whl", hash = "sha256:82c733ce660f061a39e951e9035a016bef22540e907e69ccd4d253a70c714d0b", size = 1733284, upload-time = "2025-09-19T10:19:26.609Z" },
+    { url = "https://files.pythonhosted.org/packages/2d/92/c0d77e46b4dc3fb69590b25a8b322c823a56eab8f8b91ccffde6b7aac277/dependency_injector-4.48.2-pp310-pypy310_pp73-macosx_11_0_arm64.whl", hash = "sha256:f2e3df258cb3ca59f40fffb9c88677cc9dde3f3cdd0f8fc706cf88dad2ac2736", size = 1734990, upload-time = "2025-09-19T10:19:28.173Z" },
+    { url = "https://files.pythonhosted.org/packages/11/8b/6ae9eeba0238c871a0705e10b026e6d23075dbb0e12e3933717b849a53da/dependency_injector-4.48.2-pp310-pypy310_pp73-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl", hash = "sha256:65d990ca81c8ec213e0b4b10c8e7c46caa69887502e5fc3ced7bcb04ad75ebdf", size = 1825018, upload-time = "2025-09-19T10:19:29.67Z" },
+    { url = "https://files.pythonhosted.org/packages/c5/2b/32554fa591cdf5434b590e8764765a9c7c329d400c5197c5af00c4711744/dependency_injector-4.48.2-pp310-pypy310_pp73-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:f026957ba99997a9566cb846804ec712c67428a8041d93bf2e2966ed4a4d7dfc", size = 1733507, upload-time = "2025-09-19T10:19:31.526Z" },
+    { url = "https://files.pythonhosted.org/packages/2e/6d/b5972d29961a30cf65a011f7887591b90891023b5b265be4fd69ee1001b7/dependency_injector-4.48.2-pp310-pypy310_pp73-win_amd64.whl", hash = "sha256:5e8773d3d2298c4ad446a57168e108dc9e46bdb62a5bc369ca553a14d9d239a1", size = 1621410, upload-time = "2025-09-19T10:19:33.456Z" },
+    { url = "https://files.pythonhosted.org/packages/fd/1e/2a27d65b34419818a89024413b428f1effd6125e185c4902486796281ff2/dependency_injector-4.48.2-pp311-pypy311_pp73-macosx_11_0_arm64.whl", hash = "sha256:174b117a7a5a28d45c004a3242b28184db12f9818ff4ea8d0cebc230bb5f7b65", size = 1736171, upload-time = "2025-09-19T10:19:35.431Z" },
+    { url = "https://files.pythonhosted.org/packages/7b/9c/4f55dc60c6dc3f59defd461213b58d90d977c0928e20a98d3d870413db86/dependency_injector-4.48.2-pp311-pypy311_pp73-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl", hash = "sha256:8eed93fa25368be43bc3486bddedcc5ad0a62e0a9a441d060eb80ae7980416b0", size = 1828380, upload-time = "2025-09-19T10:19:37.36Z" },
+    { url = "https://files.pythonhosted.org/packages/21/e6/16a09fdf0eb368e1c2395979ec9a4bdf7829a57ae3524be491bd5e7f05b4/dependency_injector-4.48.2-pp311-pypy311_pp73-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:85368f039e7fbef1d5f38f8ba42eca28b950288dc72aca13534ed4b3e96ee8cf", size = 1736520, upload-time = "2025-09-19T10:19:38.986Z" },
+    { url = "https://files.pythonhosted.org/packages/7c/2f/41598584075fef9e2bc33c102ba2e0b91ffb207d914b19402d3abf566de8/dependency_injector-4.48.2-pp311-pypy311_pp73-win_amd64.whl", hash = "sha256:05ff29398e23a08e840c9a89a0b516d988b337a38534d33791857bd1defd2d23", size = 1623553, upload-time = "2025-09-19T10:19:40.947Z" },
+]
+
+[[package]]
 name = "jinja2"
 version = "3.1.6"
 source = { registry = "https://pypi.org/simple" }
@@ -240,6 +281,7 @@ source = { editable = "." }
 dependencies = [
     { name = "click", version = "8.1.8", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
     { name = "click", version = "8.3.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
+    { name = "dependency-injector" },
     { name = "jinja2" },
     { name = "pydantic", version = "2.10.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
     { name = "pydantic", version = "2.12.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
@@ -249,6 +291,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "click", specifier = ">=8.0" },
+    { name = "dependency-injector", specifier = ">=4.0" },
     { name = "jinja2", specifier = ">=3.0" },
     { name = "pydantic", specifier = ">=2.0" },
     { name = "pyyaml", specifier = ">=6.0" },
