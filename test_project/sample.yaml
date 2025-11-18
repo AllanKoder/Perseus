@@ -1,0 +1,12 @@
+root: example
+out: docs/build
+format: md
+source_exts:
+	- .py
+pdoc_ext: .pdoc
+ignore_dirs:
+	- __pycache__
+extra_fields:
+	- feature_flags
+	- business_requirement
+

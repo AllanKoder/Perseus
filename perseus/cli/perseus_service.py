@@ -1,7 +1,6 @@
 import os
 import sys
 import click
-from dependency_injector.wiring import inject, Provide
 from perseus.models.context_model import PerseusContext
 from perseus.core import scanner, parser, builder
 
@@ -45,7 +44,7 @@ class PerseusService:
                         for block_text in scanner.scan_file(path):
                             for b in parser.parse_blocks([block_text], code_text=code_text):
                                 # check for any extra keys on the block (fields not in the model)
-                                declared_extras = set(getattr(self.config, "required_extra_fields", []))
+                                declared_extras = set(getattr(self.config, "extra_fields", []))
                                 block_dict = b.model_dump() if hasattr(b, "model_dump") else getattr(b, "to_dict", lambda: {})()
                                 # model_fields is the pydantic v2 class attribute
                                 model_fields = set(getattr(b.__class__, "model_fields", {}).keys())

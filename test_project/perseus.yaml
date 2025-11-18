@@ -1,2 +1,6 @@
-root: ../test_project
-
+root: example
+out: docs/build
+format: md
+source_exts:
+  - .py
+pdoc_ext: .pdoc

@@ -24,7 +24,7 @@ class ConfigData(BaseModel):
     ignore_dirs: List[str] = Field(default_factory=list)
     # list of allowed/declared extra fields that may appear inside @pdoc blocks
     # Any extra key present in a block must appear here or the build will fail.
-    required_extra_fields: List[str] = Field(default_factory=list)
+    extra_fields: List[str] = Field(default_factory=list)
 
     class Config:
         extra = "allow"

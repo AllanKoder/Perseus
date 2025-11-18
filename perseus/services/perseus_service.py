@@ -59,7 +59,7 @@ class PerseusService:
 
     def _validate_and_add_block(self, ctx, block):
         """Validate extra fields and add block to context."""
-        declared_extras = set(getattr(self.config, "required_extra_fields", []))
+        declared_extras = set(getattr(self.config, "extra_fields", []))
         block_dict = block.model_dump() if hasattr(block, "model_dump") else getattr(block, "to_dict", lambda: {})()
         model_fields = set(getattr(block.__class__, "model_fields", {}).keys())
         extras = set(block_dict.keys()) - model_fields
