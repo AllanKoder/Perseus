@@ -11,16 +11,8 @@
 {% endfor %}
 {% endif %}
 
-{% if block.code_snippet %}
-#### Code
-```python
-{{ block.code_snippet }}
-```
-{% endif %}
-
 {% endfor %}
 
----
 
 ## Global Glossary
 {% for term, defn in glossary.items() %}

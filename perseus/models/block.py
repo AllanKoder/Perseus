@@ -1,6 +1,6 @@
 """Data model for a Pdoc block, implemented with Pydantic BaseModel."""
 from typing import Dict, List, Any, Optional
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 class PdocBlock(BaseModel):
     # Allow extra fields so we can validate them against global config later
@@ -15,7 +15,7 @@ class PdocBlock(BaseModel):
     # extras removed; additional fields should be declared in global config
     code_snippet: str = ""
 
-    @validator("tickets", pre=True, each_item=False)
+    @field_validator("tickets", mode="before")
     def normalize_tickets(cls, v):
         """Normalize tickets into a list of strings.
 
@@ -47,6 +47,6 @@ class PdocBlock(BaseModel):
         base = self.model_dump(exclude={})
         # move code_snippet into 'code' key for backward compatibility
         base["code"] = base.pop("code_snippet", "")
-    # extras are validated against global config; nothing to merge here
+        # extras are validated against global config; nothing to merge here
         return base
 

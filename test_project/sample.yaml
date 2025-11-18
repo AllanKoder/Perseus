@@ -6,7 +6,3 @@ source_exts:
 pdoc_ext: .pdoc
 ignore_dirs:
 	- __pycache__
-extra_fields:
-	- feature_flags
-	- business_requirement
-

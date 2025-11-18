@@ -1,8 +1,10 @@
 import os
 import sys
+from perseus.models.config_data import ConfigData
 from perseus.models.context_model import PerseusContext
+from perseus.models.block import PdocBlock
 from perseus.core import scanner, parser, builder
-from perseus.services.config import ConfigData
+from perseus.services.config_service import ConfigService
 
 class PerseusService:
     """
@@ -14,10 +16,10 @@ class PerseusService:
         """
         Initialize the service with a config object.
         """
-        self.config = config or PerseusService().config
+        self.config = config or ConfigService().config
 
 
-    def build(self):
+    def build(self) -> str:
         """
         Orchestrate the build process: scan, parse, validate, and generate docs.
         Now walks the directory tree only once for efficiency.
@@ -34,7 +36,7 @@ class PerseusService:
         os.makedirs(out_dir, exist_ok=True)
         outpath = builder.build_docs(ctx, template_dir, out_dir, fmt=fmt)
         return outpath
-    def _scan_and_parse_blocks(self, ctx, root_dir, exts, ignore):
+    def _scan_and_parse_blocks(self, ctx: PerseusContext, root_dir: str, exts: list[str], ignore: set[str]) -> None:
         """
         Walk the directory tree once, scanning for blocks and parsing each file's content directly.
         Adds blocks to context without accumulating all code in memory.
@@ -48,28 +50,17 @@ class PerseusService:
                         for b in parser.parse_blocks([block_text]):
                             self._validate_and_add_block(ctx, b)
 
-    def _get_output_dir(self):
+    def _get_output_dir(self) -> str | None:
         """Determine the output directory from config."""
         return getattr(self.config, "out_dir", None) or getattr(self.config, "out", None)
 
 
-    def _is_ignored(self, dirpath, d, ignore):
+    def _is_ignored(self, dirpath: str, d: str, ignore: set[str]) -> bool:
         """Check if a directory should be ignored."""
         return any(d == ig or os.path.join(dirpath, d).endswith(ig) for ig in ignore)
 
-    def _validate_and_add_block(self, ctx, block):
+    def _validate_and_add_block(self, ctx: PerseusContext, block: 'PdocBlock') -> None:
         """Validate extra fields and add block to context."""
-        declared_extras = set(getattr(self.config, "extra_fields", []))
-        block_dict = block.model_dump() if hasattr(block, "model_dump") else getattr(block, "to_dict", lambda: {})()
+        block_dict = block.model_dump()
         model_fields = set(getattr(block.__class__, "model_fields", {}).keys())
-        extras = set(block_dict.keys()) - model_fields
-        if extras:
-            undeclared = extras - declared_extras
-            if undeclared:
-                print(f"Syntax error: block '{block.id}' contains undeclared extra fields: {', '.join(sorted(undeclared))}")
-                sys.exit(1)
-            for ex in sorted(extras):
-                if ex in declared_extras:
-                    val = block_dict.get(ex)
-                    ctx.glossary[f"{block.id}.{ex}"] = val
         ctx.add_block(block)

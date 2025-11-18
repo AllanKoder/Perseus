@@ -3,8 +3,8 @@
 This module intentionally contains minimal logic: configuration and CLI
 """
 import click
-from perseus.services.config import ConfigService
 from perseus.cli.perseus_cli import build
+from perseus.services.config_service import ConfigService
 
 
 @click.group()

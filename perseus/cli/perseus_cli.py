@@ -3,7 +3,7 @@
 This file exposes a PerseusService class that can be used by a thin `main` module.
 """
 import click
-from perseus.services.config import ConfigService
+from perseus.services.config_service import ConfigService
 from perseus.services.perseus_service import PerseusService
 
 @click.command("build")

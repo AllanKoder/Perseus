@@ -1,4 +1,5 @@
 """Render docs from a PerseusContext using Jinja2 templates or export JSON."""
+import re
 import os
 import json
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -15,8 +16,10 @@ def build_docs(context, template_dir, out_dir, fmt="md"):
 
     if fmt == "md":
         out = template.render(blocks=context.blocks, glossary=context.glossary)
+        # Collapse 3+ consecutive newlines to just 2
+        cleaned = re.sub(r'\n{3,}', '\n\n', out.strip())
         with open(os.path.join(out_dir, "output.md"), "w", encoding="utf-8") as f:
-            f.write(out)
+            f.write(cleaned)
         return os.path.join(out_dir, "output.md")
     elif fmt == "json":
         path = os.path.join(out_dir, "output.json")
