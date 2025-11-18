@@ -14,6 +14,7 @@ import os
 @click.option("--config", default=None, help="Path to YAML config file (relative to root, default: perseus.yaml)")
 @click.pass_context
 def cli(ctx, root, config):
+    # Initialize config singleton and store in context object
     ConfigService(root, config)
 
 cli.add_command(build)

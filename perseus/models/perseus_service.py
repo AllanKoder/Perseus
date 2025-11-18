@@ -39,9 +39,8 @@ class PerseusService(metaclass=Singleton):
         ctx = PerseusContext()
         # Scan all project directories, each resolved relative to root
         for proj_dir in self.config.project_directories:
-            abs_proj_dir = os.path.abspath(proj_dir)
-            logging.debug(f"Scanning project directory: {abs_proj_dir}")
-            self._scan_and_parse_blocks(ctx, abs_proj_dir, exts, ignore)
+            logging.debug(f"Scanning project directory: {proj_dir}")
+            self._scan_and_parse_blocks(ctx, proj_dir, exts, ignore)
 
         # TODO: Replace with other templates in the future. Do a build for each template we find, instead of just a single step.
         template_dir = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "templates"))

@@ -5,6 +5,7 @@ Defines the Pydantic ConfigData model for project configuration.
 import os
 from typing import List
 from pydantic import BaseModel, Field
+from perseus.helpers.directory import resolve_path
 
 class ConfigData(BaseModel):
     root: str = Field(default=".")
@@ -27,27 +28,18 @@ class ConfigData(BaseModel):
         """
         Return the list of project directories as absolute paths, resolved using _resolve_path.
         """
-        return [self._resolve_path(self.root, proj) for proj in self.projects]
+        return [resolve_path(self.root, proj) for proj in self.projects]
 
     @property
     def output_directory(self) -> str:
         """
         Return the configured output directory as an absolute path, using self.root.
         """
-        return self._resolve_path(self.root, self.output or "")
+        return resolve_path(self.root, self.output or "")
 
     @property
     def config_file(self) -> str:
         """
         Return the config file as an absolute path, using self.root.
         """
-        return self._resolve_path(self.root, self.config or "")
-
-    def _resolve_path(self, root: str, path: str) -> str:
-        """
-        Resolve a path relative to root unless it is absolute.
-        """
-        root_dir: str = os.path.normpath(root)
-        if path and not os.path.isabs(path):
-            return os.path.normpath(os.path.join(root_dir, path))
-        return path
+        return resolve_path(self.root, self.config or "")

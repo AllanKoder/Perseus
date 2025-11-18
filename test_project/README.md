@@ -6,16 +6,16 @@ This folder demonstrates how to use Perseus to extract and generate documentatio
 
 - `example/` — Contains sample Python files with embedded `@pdoc` blocks.
 - `docs/build/` — Output directory for generated documentation.
-- `perseus.yaml` / `sample.yaml` — Configuration files for Perseus.
+- `perseus.yaml` — Configuration files for Perseus.
 
 ### How to Run
 
 1. Make sure Perseus and its dependencies are installed (see main project README).
 2. Run the build command from the project root:
 
-	```bash
-	uv run perseus/main.py --config test_project/perseus.yaml build
-	```
+```bash
+uv run perseus/main.py --root test_project/ build
+```
 
 3. The generated documentation will appear in `test_project/docs/build/output.md`.
 
@@ -27,5 +27,5 @@ This folder demonstrates how to use Perseus to extract and generate documentatio
 
 ### Customization
 
-- Edit `perseus.yaml` or `sample.yaml` to change source paths, output location, or required fields.
+- Edit `perseus.yaml` to change source paths, output location, or required fields.
 - Add more `.pdoc` files or code blocks to expand the documentation.
