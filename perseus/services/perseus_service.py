@@ -1,6 +1,7 @@
 import os
 import sys
 import logging
+from perseus.env import LOG_LEVEL
 from perseus.models.config_data import ConfigData
 from perseus.models.context_model import PerseusContext
 from perseus.models.block import PdocBlock
@@ -19,7 +20,7 @@ class PerseusService(metaclass=Singleton):
         Initialize the service with a config object
         """
         self.config = config or ConfigService().config
-        logging.basicConfig(level=logging.DEBUG)
+        logging.basicConfig(level=LOG_LEVEL)
 
     def build(self) -> str:
         """

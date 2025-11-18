@@ -155,3 +155,7 @@ uv run perseus/main.py --config test_project/perseus.yaml build --format md
 ```
 
 This will produce Markdown in `test_project/docs/build/output.md`.
+
+## .env
+
+Change the .env for debugging and log levels, use the logger library for logging information over printing
