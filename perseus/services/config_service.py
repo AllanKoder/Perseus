@@ -16,17 +16,19 @@ class ConfigService:
     """Load configuration from YAML and return ConfigData.
 
     When `path` is None, looks for `perseus.yaml` then `perseus.yml`.
+    Stores root directory for downstream usage.
     """
     __metaclass__ = Singleton
 
-    def __init__(self, path: Optional[str] = None):
-        self.path = path
+    def __init__(self, root: Optional[str] = None, config_file: Optional[str] = None):
+        self.root = root or "."
+        self.config_file = config_file
         self.config = self.load()
 
     def load(self) -> ConfigData:
         candidates = []
-        if self.path:
-            candidates.append(self.path)
+        if self.config_file:
+            candidates.append(self.root)
         else:
             candidates.extend(["perseus.yaml", "perseus.yml"])
 

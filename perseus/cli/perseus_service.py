@@ -14,9 +14,11 @@ class PerseusService:
 
     def __init__(self, config: None | ConfigData):
         """
-        Initialize the service with a config object
+        Initialize the service with a config object, root directory, and project directories to scan.
         """
         self.config = config or ConfigService().config
+        self.root = self.config.root
+        self.project_dirs = getattr(self.config, "projects", ["."])
 
     def build(self) -> str:
         """
@@ -30,21 +32,19 @@ class PerseusService:
 
         ctx = PerseusContext()
         # Scan all project directories, each resolved relative to root
-        for proj_dir in self.config.project_directories:
-            self._scan_and_parse_blocks(ctx, proj_dir, exts, ignore)
-
-        # TODO: Replace with other templates in the future. Do a build for each template we find, instead of just a single step.
+        for proj_dir in self.project_dirs:
+            abs_proj_dir = os.path.normpath(os.path.join(self.root, proj_dir))
+            self._scan_and_parse_blocks(ctx, abs_proj_dir, exts, ignore)
         template_dir = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "templates"))
         os.makedirs(out_dir, exist_ok=True)
-
         outpath = builder.build_docs(ctx, template_dir, out_dir, fmt=fmt)
         return outpath
-    def _scan_and_parse_blocks(self, ctx: PerseusContext, proj_dir: str, exts: list[str], ignore: set[str]) -> None:
+    def _scan_and_parse_blocks(self, ctx: PerseusContext, root_dir: str, exts: list[str], ignore: set[str]) -> None:
         """
         Walk the directory tree once, scanning for blocks and parsing each file's content directly.
         Adds blocks to context without accumulating all code in memory.
         """
-        for dirpath, dirs, files in os.walk(proj_dir):
+        for dirpath, dirs, files in os.walk(root_dir):
             dirs[:] = [d for d in dirs if not self._is_ignored(dirpath, d, ignore)]
             for f in files:
                 if any(f.endswith(ext) for ext in exts):

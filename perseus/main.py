@@ -5,13 +5,16 @@ This module intentionally contains minimal logic: configuration and CLI
 import click
 from perseus.cli.perseus_cli import build
 from perseus.services.config_service import ConfigService
+import os
+
 
 
 @click.group()
-@click.option("--config", default=None, help="Path to YAML config file (default: perseus.yaml)")
+@click.option("--root", default=".", help="Root directory for resolving all relative paths")
+@click.option("--config", default=None, help="Path to YAML config file (relative to root, default: perseus.yaml)")
 @click.pass_context
-def cli(ctx, config):
-    ConfigService(config)
+def cli(ctx, root, config):
+    ConfigService(root, config)
 
 cli.add_command(build)
 

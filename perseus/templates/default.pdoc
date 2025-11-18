@@ -7,12 +7,9 @@
 
 {% if block.tickets %}
 #### Tickets
-{% for t in block.tickets %}- {{ t }}
-{% endfor %}
+{% for t in block.tickets %}- {{ t }}{% endfor %}
 {% endif %}
-
 {% endfor %}
-
 
 ## Global Glossary
 {% for term, defn in glossary.items() %}

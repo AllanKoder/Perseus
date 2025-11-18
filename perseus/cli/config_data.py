@@ -23,13 +23,6 @@ class ConfigData(BaseModel):
         extra = "allow"
 
     @property
-    def project_directories(self) -> list[str]:
-        """
-        Return the list of project directories as absolute paths, resolved using _resolve_path.
-        """
-        return [self._resolve_path(self.root, proj) for proj in self.projects]
-
-    @property
     def output_directory(self) -> str:
         """
         Return the configured output directory as an absolute path, using self.root.

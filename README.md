@@ -6,7 +6,7 @@ A documentation extraction and generation system that converts structured commen
 
 ## Overview
 
-Perseus extracts structured `@pdoc` blocks from code comments, merges them with additional narrative documents, and compiles them into Markdown, JSON, or HTML outputs using Jinja-style templating.
+Perseus extracts structured `@pdoc` blocks from code comments, merges them with additional narrative documents, and compiles them into Markdown or JSON outputs using Jinja-style templating.
 
 Key design goals:
 
@@ -19,10 +19,8 @@ Key design goals:
 
 ## Core Features
 
-## Core Features
-
 - **Build docs with one command:**
-  - Run `pers build` to scan your codebase and `.pdoc` files, extract context, and generate Markdown docs.
+  - Run `perseus build` to scan your codebase and `.pdoc` files, extract context, and generate Markdown docs.
 - **Single config file:**
   - Use `perseus.yaml` to set source paths, output location, templates, and format (Markdown, JSON, HTML).
 - **Narrative `.pdoc` templates:**
@@ -44,7 +42,7 @@ Typical workflow:
 
 Embedded in code comments. These define structured metadata.
 
-Supported fields:
+Ideal Supported fields (only some implemented currently):
 
 * `intention` – high-level purpose of the unit
 * `tickets` – JIRA or other ticket links
@@ -108,7 +106,7 @@ Uses a Jinja2-compatible engine to render Markdown, JSON, or HTML.
 ### CLI Interface
 The `pers` binary provides:
 - `pers build`
-- Future: `pers watch`, `pers list`, `pers glossary`, etc.
+- Future commands: `pers watch`, `pers list`, `pers glossary`, etc.
 
 ---
 
@@ -120,22 +118,17 @@ Supports structured ticket metadata beyond simple strings.
 ### Tagging
 Allows tagging functions, methods, classes, or files for search, indexing, and pattern detection.
 
-### Customizable Content Fields
-Teams can define their own fields and use them in `.pdoc` templates.
-
 ### Documentation Design
 Teams may choose between:
 - Co-located documentation (context embedded next to code)
 - Centralized `.pdoc` narrative documents
 - A hybrid model
-
 ---
 
 ## Output Formats
 Perseus supports the following output types:
 - Markdown (primary)
 - JSON (intermediate representation)
-- HTML (optional)
 
 Markdown is typically generated from `.pdoc` templates.
 

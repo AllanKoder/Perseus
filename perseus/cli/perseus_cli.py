@@ -7,20 +7,18 @@ from perseus.services.config_service import ConfigService
 from perseus.services.perseus_service import PerseusService
 
 @click.command("build")
-@click.option("--root", default=None, help="Root directory to scan for source files")
-@click.option("--out", default=None, help="Output directory for generated docs")
+@click.option("--projects", default=None, help="Comma-separated list of directories to scan for source files (relative to root)")
+@click.option("--output", default=None, help="Output directory for generated docs")
 @click.option("--format", "-f", default=None, help="Output format: md or json")
 @click.option("--ext", default=None, help="Comma-separated source extensions to scan (e.g. .py,.js)")
 @click.option("--pdoc-ext", default=None, help="Extension for Perseus doc files (default .pdoc)")
 @click.option("--watch", is_flag=True, default=False, help="Enable watch mode (not implemented in demo)")
-def build(root, out, format, ext, pdoc_ext, watch):
+def build(projects, output, format, ext, pdoc_ext, watch):
     """Build docs using Pdocs in root project."""
     # apply CLI overrides if provided
     cfg = ConfigService().config
-    if root:
-        cfg.root = root
-    if out:
-        cfg.out = out
+    if output:
+        cfg.output = output
     if format:
         cfg.format = format
     if ext:
@@ -29,6 +27,8 @@ def build(root, out, format, ext, pdoc_ext, watch):
         cfg.pdoc_ext = pdoc_ext
     if watch:
         cfg.watch = True
+    if projects:
+        cfg.projects = [d.strip() for d in projects.split(",") if d.strip()]
 
     perseus_service = PerseusService(cfg)
 
