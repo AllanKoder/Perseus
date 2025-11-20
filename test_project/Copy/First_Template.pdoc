@@ -1,0 +1,14 @@
+PERSEUS BLOCK REPORT
+====================
+
+ID            | INTENTION                      | TICKETS
+---------------------------------------------------------------
+{% for id, block in blocks.items() %}
+{{ id.ljust(12) }} | {{ (block.intention or "None").ljust(30) }} | {% if block.tickets %}{{ block.tickets | join(", ") }}{% else %}(none){% endif %}
+{% endfor %}
+
+GLOSSARY
+========
+{% for term, defn in glossary.items() %}
+{{ term }} = {{ defn }}
+{% endfor %}

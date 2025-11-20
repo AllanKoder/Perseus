@@ -9,15 +9,16 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 def build_docs(
     context: Any,
-    template_dir: str,
     out_dir: str,
+    template_dir: str,
+    template_file: str,
     fmt: str = "md"
 ) -> str:
     env = Environment(
         loader=FileSystemLoader(template_dir),
         autoescape=select_autoescape([]),
     )
-    template = env.get_template("default.pdoc")
+    template = env.get_template(template_file)
 
     os.makedirs(out_dir, exist_ok=True)
 
@@ -27,13 +28,14 @@ def build_docs(
         lines = [line.rstrip() for line in out.splitlines()]
         cleaned = "\n".join(lines)
         cleaned = re.sub(r'\n{3,}', '\n\n', cleaned.strip())
-
-        output_path: str = os.path.join(out_dir, "output.md")
+        out_file_name = f"output_{template_file.split('.')[0]}.md"
+        output_path: str = os.path.join(out_dir, out_file_name)
         with open(output_path, "w", encoding="utf-8") as f:
             f.write(cleaned)
         return output_path
     elif fmt == "json":
-        path: str = os.path.join(out_dir, "output.json")
+        out_file_name = f"output_{template_file.split('.')[0]}.json"
+        path: str = os.path.join(out_dir, out_file_name)
         with open(path, "w", encoding="utf-8") as f:
             json.dump({"blocks": context.model_dump(), "glossary": context.glossary}, f, indent=2)
         return path

@@ -32,5 +32,7 @@ def build(projects, output, format, ext, pdoc_ext, watch):
 
     perseus_service = PerseusService(cfg)
 
-    outpath = perseus_service.build()
-    click.echo(f"Built: {outpath}")
+    outpaths = perseus_service.build()
+
+    for outpath in outpaths:
+        click.echo(f"Built: {outpath}")

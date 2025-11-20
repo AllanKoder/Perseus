@@ -1,0 +1,21 @@
+DOCUMENTATION TREE
+===================
+
+{% for id, block in blocks.items() %}
+├── Block: {{ id }}
+│   ├── Intention: {{ block.intention or "None" }}
+│   └── Tickets:
+{% if block.tickets %}
+{% for t in block.tickets %}
+│       - {{ t }}
+{% endfor %}
+{% else %}
+│       (none)
+{% endif %}
+{% endfor %}
+
+GLOSSARY
+========
+{% for term, defn in glossary.items() %}
+- {{ term }} → {{ defn }}
+{% endfor %}
