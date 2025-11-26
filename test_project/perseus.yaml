@@ -1,6 +1,5 @@
 projects:
   - example
-  - other_example
   - .
 ignore_dirs:
   - __pycache__
