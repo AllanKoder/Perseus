@@ -159,3 +159,44 @@ This will produce Markdown in `test_project/docs/build/output.md`.
 ## .env
 
 Change the .env for debugging and log levels, use the logger library for logging information over printing
+
+### Jira Integration (Optional)
+
+Perseus can automatically enrich ticket references with live data from Jira. To enable this feature:
+
+1. **Configure your `.env` file:**
+```bash
+JIRA_BASE_URL=https://your-company.atlassian.net
+JIRA_EMAIL=your-email@company.com
+JIRA_API_TOKEN=your_api_token_here
+```
+
+2. **Generate a Jira API token:**
+   - Go to https://id.atlassian.com/manage-profile/security/api-tokens
+   - Create a new API token
+   - Copy the token to your `.env` file
+
+3. **Reference tickets in your code:**
+```python
+"""
+@pdoc
+id: example_function
+tickets:
+  - KAN-1
+  - KAN-4
+@endp
+"""
+```
+
+4. **Access enriched data in templates:**
+```jinja
+{% if block.tickets_enriched %}
+| Key | Title | Status | Assignee | Priority |
+|-----|-------|--------|----------|----------|
+{% for t in block.tickets_enriched %}
+| [{{ t.key }}]({{ t.url }}) | {{ t.title }} | {{ t.status }} | {{ t.assignee }} | {{ t.priority }} |
+{% endfor %}
+{% endif %}
+```
+
+The system automatically fetches ticket details (title, status, assignee, priority, URL) during the build process. Results are cached to minimize API calls. If credentials are not configured, tickets will be displayed as simple text.
