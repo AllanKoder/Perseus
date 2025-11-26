@@ -1,0 +1,98 @@
+# External Integrations Documentation
+
+Integration layer for connecting with external distribution channels, property management systems, and third-party services.
+
+---
+
+{% for id, block in blocks.items() %}
+{% if 'integration' in block.tags or 'channel' in block.tags or 'external' in block.tags %}
+
+## {{ block.id | replace('_', ' ') | title }}
+
+{{ block.intention }}
+
+**Integration Type:** `{{ block.tags | join('`, `') }}`
+
+{% if block.business_requirement %}
+**Integration Requirements**
+
+{{ block.business_requirement }}
+{% endif %}
+
+{% if block.feature_flags %}
+**Supported Channels**
+
+{% for flag in block.feature_flags %}
+- `{{ flag }}`
+{% endfor %}
+{% endif %}
+
+{% if block.tickets_enriched %}
+**Implementation Status**
+
+| Ticket | Summary | Status | Owner | Priority |
+|--------|---------|--------|-------|----------|
+{% for t in block.tickets_enriched %}| [{{ t.key }}]({{ t.url }}) | {{ t.title }} | `{{ t.status }}` | {{ t.assignee }} | {{ t.priority }} |
+{% endfor %}
+{% endif %}
+
+---
+
+{% endif %}
+{% endfor %}
+
+## Integration Terminology
+
+{% for term, defn in glossary.items() %}
+{% if term in ['PMS', 'OTA', 'GDS', 'Channel Manager', 'Rate Parity', 'Two-way Sync'] %}
+**{{ term }}:** {{ defn }}
+
+{% endif %}
+{% endfor %}
+
+## Integration Architecture
+
+### Channel Distribution Flow
+
+```
+┌──────────────────────┐
+│  Booking Platform    │
+│  (Source of Truth)   │
+└──────────┬───────────┘
+           │
+    ┌──────┴──────┐
+    │ Integration │
+    │   Adapter   │
+    └──────┬──────┘
+           │
+    ┌──────┴────────────┐
+    ▼                   ▼
+┌────────────┐    ┌──────────────┐
+│ OTA APIs   │    │ PMS Systems  │
+├────────────┤    ├──────────────┤
+│ Expedia    │    │ Opera        │
+│ Booking.com│    │ Cloudbeds    │
+│ Airbnb     │    │ Mews         │
+└────────────┘    └──────────────┘
+    │
+    ▼
+┌────────────┐
+│ GDS        │
+├────────────┤
+│ Sabre      │
+│ Amadeus    │
+│ Travelport │
+└────────────┘
+```
+
+### Synchronization Protocols
+
+- **Real-time**: Inventory updates, new bookings
+- **Batch (5min)**: Rate changes, bulk availability updates
+- **On-demand**: Rate parity audits, reconciliation reports
+
+### Error Handling
+
+- Exponential backoff for failed syncs
+- Circuit breaker pattern for degraded external services
+- Manual reconciliation tools for data conflicts

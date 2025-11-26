@@ -28,13 +28,13 @@ def build_docs(
         lines = [line.rstrip() for line in out.splitlines()]
         cleaned = "\n".join(lines)
         cleaned = re.sub(r'\n{3,}', '\n\n', cleaned.strip())
-        out_file_name = f"output_{template_file.split('.')[0]}.md"
+        out_file_name = f"{template_file.replace('.pdoc', '.md')}"
         output_path: str = os.path.join(out_dir, out_file_name)
         with open(output_path, "w", encoding="utf-8") as f:
             f.write(cleaned)
         return output_path
     elif fmt == "json":
-        out_file_name = f"output_{template_file.split('.')[0]}.json"
+        out_file_name = f"{template_file.replace('.pdoc', '.json')}"
         path: str = os.path.join(out_dir, out_file_name)
         with open(path, "w", encoding="utf-8") as f:
             json.dump({"blocks": context.model_dump(), "glossary": context.glossary}, f, indent=2)

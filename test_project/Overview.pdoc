@@ -1,0 +1,85 @@
+# Hotel Booking Platform
+
+## System Architecture
+
+A distributed booking platform supporting reservations, payments, notifications, and channel distribution.
+
+## Module Overview
+
+### 📅 Booking Services → [src/booking/](src/booking/)
+
+Reservation lifecycle management including creation, modification, cancellation, inventory, and dynamic pricing.
+
+{% for id, block in blocks.items() %}
+{% if 'booking' in block.tags %}
+- **{{ block.id | replace('_', ' ') | title }}**: {{ block.intention | truncate(100) }}
+{% endif %}
+{% endfor %}
+
+### 💳 Payment Processing → [src/payments/](src/payments/)
+
+PCI DSS compliant payment handling with fraud detection and multi-currency support.
+
+{% for id, block in blocks.items() %}
+{% if 'payment' in block.tags or 'financial' in block.tags %}
+- **{{ block.id | replace('_', ' ') | title }}**: {{ block.intention | truncate(100) }}
+{% endif %}
+{% endfor %}
+
+### 📧 Messaging → [src/messaging/](src/messaging/)
+
+Multi-channel customer communications with delivery tracking.
+
+{% for id, block in blocks.items() %}
+{% if 'notification' in block.tags or 'messaging' in block.tags or 'communication' in block.tags %}
+- **{{ block.id | replace('_', ' ') | title }}**: {{ block.intention | truncate(100) }}
+{% endif %}
+{% endfor %}
+
+### 🔗 Channel Integration → [src/channels/](src/channels/)
+
+External system synchronization with OTAs, GDS, and property management systems.
+
+{% for id, block in blocks.items() %}
+{% if 'integration' in block.tags or 'channel' in block.tags or 'external' in block.tags %}
+- **{{ block.id | replace('_', ' ') | title }}**: {{ block.intention | truncate(100) }}
+{% endif %}
+{% endfor %}
+
+---
+
+## Platform-Wide Development Activity
+
+{% set has_tickets = false %}
+{% for id, block in blocks.items() %}
+{% if block.tickets_enriched %}
+{% set has_tickets = true %}
+{% endif %}
+{% endfor %}
+
+{% if has_tickets %}
+
+All active development work across modules:
+
+| Module | Ticket | Summary | Status | Owner |
+|--------|--------|---------|--------|-------|
+{% for id, block in blocks.items() %}
+{% if block.tickets_enriched %}
+{% for t in block.tickets_enriched %}| {{ block.id | replace('_', ' ') | title }} | [{{ t.key }}]({{ t.url }}) | {{ t.title }} | `{{ t.status }}` | {{ t.assignee }} |
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+---
+
+## Complete Platform Glossary
+
+{% for term, defn in glossary.items() %}
+**{{ term }}:** {{ defn }}
+
+{% endfor %}
+
+---
+
+*For detailed documentation on each module, see the README in each folder. This overview is auto-generated from code metadata.*

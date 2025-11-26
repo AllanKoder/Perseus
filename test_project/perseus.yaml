@@ -1,8 +1,8 @@
 projects:
-  - example
   - .
 ignore_dirs:
   - __pycache__
+  - docs
 source_exts:
   - .py
 output: docs/build

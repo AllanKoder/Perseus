@@ -1,0 +1,74 @@
+# Core Services Documentation
+
+This module contains the primary business logic services for the hotel booking platform.
+
+---
+
+## Service Overview
+
+{% for id, block in blocks.items() %}
+{% if 'booking' in block.tags or 'payment' in block.tags or 'notification' in block.tags or 'service' in block.tags %}
+
+### {{ block.id | replace('_', ' ') | title }}
+
+{{ block.intention }}
+
+**Classification:** `{{ block.tags | join('`, `') }}`
+
+{% if block.business_requirement %}
+**Business Requirements**
+
+{{ block.business_requirement }}
+{% endif %}
+
+{% if block.feature_flags %}
+**Feature Capabilities**
+
+{% for flag in block.feature_flags %}
+- `{{ flag }}`
+{% endfor %}
+{% endif %}
+
+{% if block.tickets_enriched %}
+**Development Status**
+
+| Ticket | Summary | Status | Owner | Priority |
+|--------|---------|--------|-------|----------|
+{% for t in block.tickets_enriched %}| [{{ t.key }}]({{ t.url }}) | {{ t.title }} | `{{ t.status }}` | {{ t.assignee }} | {{ t.priority }} |
+{% endfor %}
+{% endif %}
+
+---
+
+{% endif %}
+{% endfor %}
+
+## Service Domain Terminology
+
+{% for term, defn in glossary.items() %}
+{% if term in ['Reservation Window', 'Hold Period', 'Occupancy Rate', 'Available Inventory', 'Overbooking Buffer', 'Rate Plan', 'Block Date', 'Dynamic Pricing', 'PCI DSS', 'CVV', 'ACH', '3DS', 'Chargeback', 'Transactional Email', 'Push Notification', 'Delivery Rate', 'Opt-in Status'] %}
+**{{ term }}:** {{ defn }}
+
+{% endif %}
+{% endfor %}
+
+## Service Architecture
+
+### Request Flow
+
+```
+Client Request
+     ↓
+Booking Controller
+     ↓
+┌────┴────┬─────────┬──────────┐
+↓         ↓         ↓          ↓
+Inventory Payment  Customer  Notification
+Service   Service  Profile   Service
+```
+
+### Key Responsibilities
+
+- **Booking Services**: Reservation lifecycle, availability management
+- **Payment Services**: Transaction processing, fraud detection, refunds
+- **Notification Services**: Multi-channel customer communications
