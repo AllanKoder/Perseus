@@ -17,8 +17,8 @@ tags:
   - controller
 
 tickets:
-  - JIRA-123: Validate booking form
-  - JIRA-456: Add cancellation flow
+  - KAN-1
+  - KAN-4
 @endp
 """
 def booking_controller(user_id, form_data):

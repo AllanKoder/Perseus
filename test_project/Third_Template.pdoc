@@ -5,9 +5,12 @@
 
 {{ block.intention }}
 
-{% if block.tickets %}
-#### Tickets
-{% for t in block.tickets %}- {{ t }}{% endfor %}
+{% if block.tickets_enriched %}
+#### Related Tickets
+| Key | Title | Status | Assignee | Priority |
+|-----|-------|--------|----------|----------|
+{% for t in block.tickets_enriched %}| [{{ t.key }}]({{ t.url }}) | {{ t.title }} | {{ t.status }} | {{ t.assignee }} | {{ t.priority }} |
+{% endfor %}
 {% endif %}
 {% endfor %}
 

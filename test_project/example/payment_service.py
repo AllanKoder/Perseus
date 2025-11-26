@@ -25,8 +25,8 @@ business_requirement: >
   Must comply with PCI DSS and support refunds.
 
 tickets:
-  - JIRA-789: Integrate ACH payments
-  - JIRA-101: Add refund support
+  - KAN-5
+  - KAN-6
 @endp
 """
 def payment_service(user_id, payment_data):

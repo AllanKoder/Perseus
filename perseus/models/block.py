@@ -1,5 +1,5 @@
 """Data model for a Pdoc block, implemented with Pydantic BaseModel."""
-from typing import Dict, List, Any, Optional
+from typing import Dict, List
 from pydantic import BaseModel, Field, field_validator
 
 class PdocBlock(BaseModel):
@@ -12,6 +12,7 @@ class PdocBlock(BaseModel):
     vocabulary: Dict[str, str] = Field(default_factory=dict)
     tags: List[str] = Field(default_factory=list)
     tickets: List[str] = Field(default_factory=list)
+    tickets_enriched: List[Dict[str, str]] = Field(default_factory=list)  # Runtime enriched data
     # extras removed; additional fields should be declared in global config
     code_snippet: str = ""
 

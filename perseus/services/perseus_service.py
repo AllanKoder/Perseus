@@ -8,6 +8,7 @@ from perseus.models.context_model import PerseusContext
 from perseus.models.block import PdocBlock
 from perseus.core import scanner, parser, builder
 from perseus.services.config_service import ConfigService
+from perseus.services.jira_service import JiraService
 from perseus.services.metaclasses import Singleton
 
 class PerseusService(metaclass=Singleton):
@@ -21,6 +22,7 @@ class PerseusService(metaclass=Singleton):
         Initialize the service with a config object
         """
         self.config = config or ConfigService().config
+        self.jira_service = JiraService()
         logging.basicConfig(level=LOG_LEVEL)
 
     def build(self) -> List[str]:
@@ -102,5 +104,9 @@ class PerseusService(metaclass=Singleton):
 
     def _validate_and_add_block(self, ctx: PerseusContext, block: 'PdocBlock') -> None:
         """Validate extra fields and add block to context."""
+        # Enrich tickets with Jira data
+        if block.tickets:
+            block.tickets_enriched = self.jira_service.enrich_tickets(block.tickets)
+        
         logging.debug(f"Adding block to context: {block}")
         ctx.add_block(block)
