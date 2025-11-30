@@ -7,17 +7,16 @@ import logging
 from typing import Dict, Optional
 from functools import lru_cache
 from jira import JIRA
-from perseus.services.config_service import ConfigService
+from perseus.env import JIRA_API_TOKEN, JIRA_BASE_URL, JIRA_EMAIL
 from perseus.services.metaclasses import Singleton
 
 class JiraService(metaclass=Singleton):
     """Fetches ticket data from Jira API with caching."""
 
-    def __init__(self, config: Optional[ConfigService] = None):
-        cfg = config or ConfigService().config
-        self.base_url = cfg.jira_base_url.rstrip("/")
-        self.email = cfg.jira_email.strip('"').strip("'")
-        self.api_token = cfg.jira_api_token.strip('"').strip("'")
+    def __init__(self):
+        self.base_url = JIRA_BASE_URL.rstrip("/")
+        self.email = JIRA_EMAIL.strip('"').strip("'")
+        self.api_token = JIRA_API_TOKEN.strip('"').strip("'")
 
         self.enabled = bool(self.base_url and self.email and self.api_token)
         self.jira = None
