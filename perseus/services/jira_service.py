@@ -13,7 +13,7 @@ from perseus.services.metaclasses import Singleton
 class JiraService(metaclass=Singleton):
     """Fetches ticket data from Jira API with caching."""
 
-    def __init__(self, config: ConfigService | None = None):
+    def __init__(self, config: Optional[ConfigService] = None):
         cfg = config or ConfigService().config
         self.base_url = cfg.jira_base_url.rstrip("/")
         self.email = cfg.jira_email.strip('"').strip("'")

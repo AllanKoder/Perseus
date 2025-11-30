@@ -2,8 +2,9 @@
 
 Defines the Pydantic ConfigData model for project configuration.
 """
-import os
-from typing import List
+import logging
+import tempfile
+from typing import List, Optional
 from pydantic import BaseModel, Field
 from perseus.helpers.directory import resolve_absolute
 from pathlib import Path
@@ -48,31 +49,35 @@ class ConfigData(BaseModel):
         """
         Return the configured output directory as an absolute path, using self.root.
         """
-        return resolve_absolute(self.root, self.output)
+        res = resolve_absolute(self.root, self.output)
+        return str(Path(res)) if res else ""
 
     @property
     def output_directory_abs(self) -> str:
         """
         Return the configured output directory as an absolute, normalized path.
         """
-        return resolve_absolute(self.root, self.output)
+        res = resolve_absolute(self.root, self.output)
+        return str(Path(res)) if res else ""
 
     @property
     def config_file(self) -> str:
         """
         Return the config file as an absolute path, using self.root.
         """
-        return resolve_absolute(self.root, self.config)
+        res = resolve_absolute(self.root, self.config)
+        return str(Path(res)) if res else ""
 
     @property
     def config_file_abs(self) -> str:
         """
         Return the config file path as an absolute, normalized path.
         """
-        return resolve_absolute(self.root, self.config)
+        res = resolve_absolute(self.root, self.config)
+        return str(Path(res)) if res else ""
 
 
-    def output_subdir_for_template(self, template_dir: str, proj_root: str | None) -> str:
+    def output_subdir_for_template(self, template_dir: str, proj_root: Optional[str]) -> str:
         """
         Given a template directory and the project root that owns it, return the
         appropriate output subdirectory under the configured `output_directory`.
@@ -82,9 +87,12 @@ class ConfigData(BaseModel):
         `output_directory`. Otherwise the top-level `output_directory` is used.
         """
         out_root = self.output_directory_abs
+        out_root_path = Path(out_root) if out_root else Path(self.root).resolve()
 
         if not proj_root:
-            raise ValueError("proj_root is required to compute template output subdir")
+            # If no project root was provided this is likely the packaged default
+            # template — return the top-level output directory.
+            return str(out_root_path)
 
         proj_root_resolved = resolve_absolute(self.root, proj_root)
         if not proj_root_resolved:
@@ -104,10 +112,29 @@ class ConfigData(BaseModel):
         try:
             rel = template_path.relative_to(proj_root_path)
         except Exception:
-            raise ValueError(f"Template directory {template_path} is not inside project root {proj_root_path}")
+            # Template not in project root — if this is the packaged default
+            # template extracted into a temp dir, treat it as intended and
+            # silently fall back to top-level output. Otherwise warn so
+            # unexpected mismatches are visible.
+            tempdir = Path(tempfile.gettempdir())
+            try:
+                is_temp = template_path.is_relative_to(tempdir)
+            except AttributeError:
+                # Python <3.9 fallback: fall back to prefix check
+                try:
+                    is_temp = str(template_path).startswith(str(tempdir))
+                except Exception:
+                    is_temp = False
 
-        rel_path = str(rel)
-        return os.path.join(out_root, rel_path) if rel_path != "." else out_root
+            if is_temp or "perseus_templates_" in str(template_path):
+                # intended packaged default -> silent fallthrough to top-level output
+                return str(out_root_path)
+
+            logging.warning(f"Template directory {template_path} is not inside project root {proj_root_path}; using top-level output directory")
+            return str(out_root_path)
+
+        rel_path = rel
+        return str(out_root_path.joinpath(rel_path)) if rel_path != Path(".") else str(out_root_path)
 
     def validate_paths(self) -> None:
         """Validate configured paths and raise explicit errors on problems.
@@ -124,19 +151,24 @@ class ConfigData(BaseModel):
             resolved = resolve_absolute(self.root, proj)
             if not resolved:
                 raise FileNotFoundError(f"Project directory resolves to empty path: {proj}")
-            if not os.path.exists(resolved):
+            p = Path(resolved)
+            if not p.exists():
                 raise FileNotFoundError(f"Project directory not found: {resolved}")
-            if not os.path.isdir(resolved):
+            if not p.is_dir():
                 raise NotADirectoryError(f"Project directory is not a directory: {resolved}")
 
         # Validate config file if present
         cfg_path = resolve_absolute(self.root, self.config)
-        if cfg_path and not os.path.exists(cfg_path):
-            raise FileNotFoundError(f"Config file not found: {cfg_path}")
-        if cfg_path and not os.path.isfile(cfg_path):
-            raise FileNotFoundError(f"Config path is not a file: {cfg_path}")
+        if cfg_path:
+            p = Path(cfg_path)
+            if not p.exists():
+                raise FileNotFoundError(f"Config file not found: {cfg_path}")
+            if not p.is_file():
+                raise FileNotFoundError(f"Config path is not a file: {cfg_path}")
 
         # Validate output directory if it exists already
         out = resolve_absolute(self.root, self.output)
-        if out and os.path.exists(out) and not os.path.isdir(out):
-            raise NotADirectoryError(f"Configured output path exists and is not a directory: {out}")
+        if out:
+            p = Path(out)
+            if p.exists() and not p.is_dir():
+                raise NotADirectoryError(f"Configured output path exists and is not a directory: {out}")

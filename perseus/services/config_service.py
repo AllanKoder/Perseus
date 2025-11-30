@@ -5,7 +5,7 @@ reads YAML from disk (defaulting to `perseus.yaml` then `perseus.yml`). The
 loader returns a validated `ConfigData` instance. This keeps parsing/validation
 isolated from CLI logic and follows single-responsibility principles.
 """
-import os
+from pathlib import Path
 from typing import Optional
 import yaml
 from perseus.models.config_data import ConfigData
@@ -38,19 +38,22 @@ class ConfigService(metaclass=Singleton):
             # If user explicitly supplied a config file, fail fast when it's not found
             if self.config_file:
                 # config_path may be empty when `file` is falsy; report the original name in that case
-                if not config_path or not os.path.exists(config_path):
+                if not config_path or not Path(config_path).exists():
                     raise FileNotFoundError(f"Specified config file not found: {config_path or file}")
                 # If the resolved path exists but is not a regular file (e.g. a directory), fail too
-                if not os.path.isfile(config_path):
+                if not Path(config_path).is_file():
                     raise FileNotFoundError(f"Specified config path is not a file: {config_path}")
 
             # For automatic discovery, skip non-existing candidates or non-files
-            if not config_path or not os.path.exists(config_path) or not os.path.isfile(config_path):
+            if not config_path:
+                continue
+            p = Path(config_path)
+            if not p.exists() or not p.is_file():
                 continue
 
             try:
-                with open(config_path, "r", encoding="utf-8") as fh:
-                    data = yaml.safe_load(fh)
+                with p.open("r", encoding="utf-8") as fh:
+                    data = yaml.safe_load(fh) or {}
             except Exception:
                 raise IOError(f"Specified config path could not be read: {config_path}")
             break
