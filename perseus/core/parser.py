@@ -4,6 +4,7 @@ from perseus.models.block import PdocBlock
 import re
 import textwrap
 from typing import List
+from perseus.helpers.language import strip_comment_prefixes, Style
 
 
 def extract_code_near(block_id: str, source_text: str, context_lines: int = 8) -> str:
@@ -52,10 +53,11 @@ def parse_blocks(yaml_blocks: List[str], code_text: str = None) -> List[PdocBloc
         try:
             data = yaml.safe_load(clean) or {}
         except yaml.YAMLError:
-            # Fallback: try line-by-line stripping leading comment markers
-            lines = [l.lstrip('# ').rstrip() for l in clean.splitlines()]
+            # Fallback: try stripping common comment prefixes (handles C-style
+            # `*` leaders, //, and #) and re-parse.
             try:
-                data = yaml.safe_load('\n'.join(lines)) or {}
+                lines_stripped = strip_comment_prefixes(clean, Style.UNKNOWN)
+                data = yaml.safe_load('\n'.join(lines_stripped.splitlines())) or {}
             except Exception:
                 data = {}
         if not isinstance(data, dict) or "id" not in data:
