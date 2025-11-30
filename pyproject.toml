@@ -15,6 +15,7 @@ dependencies = [
   "pyyaml>=6.0",
   "dependency-injector>=4.0",
   "python-dotenv>=1.0.1",
+  "jira>=3.8.0",
 ]
 
 # Create a console script 'pers' that points to the CLI group in main.py

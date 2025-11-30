@@ -10,7 +10,7 @@ from typing import Optional
 import yaml
 from perseus.models.config_data import ConfigData
 from perseus.services.metaclasses import Singleton
-from perseus.helpers.directory import resolve_path
+from perseus.helpers.directory import resolve_absolute
 
 class ConfigService(metaclass=Singleton):
     """Load configuration from YAML and return ConfigData.
@@ -33,14 +33,27 @@ class ConfigService(metaclass=Singleton):
 
         data = {}
         for file in candidates:
-            config_path = resolve_path(self.root, file)
-            if config_path:
-                try:
-                    with open(config_path, "r", encoding="utf-8") as fh:
-                        data = yaml.safe_load(fh) or {}
-                except Exception:
-                    data = {}
-                break
+            config_path = resolve_absolute(self.root, file)
+
+            # If user explicitly supplied a config file, fail fast when it's not found
+            if self.config_file:
+                # config_path may be empty when `file` is falsy; report the original name in that case
+                if not config_path or not os.path.exists(config_path):
+                    raise FileNotFoundError(f"Specified config file not found: {config_path or file}")
+                # If the resolved path exists but is not a regular file (e.g. a directory), fail too
+                if not os.path.isfile(config_path):
+                    raise FileNotFoundError(f"Specified config path is not a file: {config_path}")
+
+            # For automatic discovery, skip non-existing candidates or non-files
+            if not config_path or not os.path.exists(config_path) or not os.path.isfile(config_path):
+                continue
+
+            try:
+                with open(config_path, "r", encoding="utf-8") as fh:
+                    data = yaml.safe_load(fh) or {}
+            except Exception:
+                raise RuntimeError(f"Specified config path could not be read: {config_path}")
+            break
 
         config = ConfigData(**(data or {}))
         config.root = self.root

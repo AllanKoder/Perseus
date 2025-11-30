@@ -31,13 +31,13 @@ class PerseusService(metaclass=Singleton):
         Orchestrate the build process: scan, parse, validate, and generate docs.
         Now walks the directory tree only once for efficiency.
         """
-        out_dir = self.config.output_directory
+        out_dir = self.config.output_directory_abs
         fmt = self.config.format
         exts = self.config.source_exts
         ignore = set(getattr(self.config, "ignore_dirs", []))
 
         logging.debug(f"Output directory resolved to: {out_dir}")
-        logging.debug(f"Project directories to scan: {self.config.project_directories}")
+        logging.debug(f"Project directories to scan: {self.config.project_directories_abs}")
         logging.debug(f"Source extensions: {exts}")
         logging.debug(f"Ignore directories: {ignore}")
 
@@ -45,38 +45,33 @@ class PerseusService(metaclass=Singleton):
         if os.path.exists(out_dir):
             logging.debug(f"Cleaning output directory: {out_dir}")
             shutil.rmtree(out_dir)
-        
+
         ctx = PerseusContext()
-        # Scan all project directories, each resolved relative to root
-        for proj_dir in self.config.project_directories:
-            abs_proj_dir = os.path.abspath(proj_dir)
-            logging.debug(f"Scanning project directory for blocks: {abs_proj_dir}")
-            self._scan_and_parse_blocks(ctx, abs_proj_dir, exts, ignore)
+        # Scan all project directories (already resolved via config), use config to ensure absolute
+        for proj_dir in self.config.project_directories_abs:
+            logging.debug(f"Scanning project directory for blocks: {proj_dir}")
+            self._scan_and_parse_blocks(ctx, proj_dir, exts, ignore)
 
         templates =  set()  # (directory path, template file name, project root)
         # Scan all the project directories to get all the templates
-        for proj_dir in self.config.project_directories:
-            abs_proj_dir = os.path.abspath(proj_dir)
-            logging.debug(f"Scanning project directory for templates: {abs_proj_dir}")
-            self._scan_and_parse_templates(templates, abs_proj_dir, abs_proj_dir)
+        for proj_dir in self.config.project_directories_abs:
+            logging.debug(f"Scanning project directory for templates: {proj_dir}")
+            self._scan_and_parse_templates(templates, proj_dir)
         # default template if none found
         if not templates:
             logging.debug("No templates found, using default template.")
-            templates = set([(os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "templates")), "default.pdoc", None)])
-        
+            default_template_dir = os.path.normpath(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "templates")))
+            templates = set([(default_template_dir, "default.pdoc", None)])
+
         outpaths: List[str] = []
         os.makedirs(out_dir, exist_ok=True)
 
         for template_dir, template_file, proj_root in templates:
             logging.debug(f"Template resolved to: {template_dir}/{template_file}")
-            
-            # Calculate relative path from project root to maintain folder structure
-            if proj_root and template_dir.startswith(proj_root):
-                rel_path = os.path.relpath(template_dir, proj_root)
-                output_subdir = os.path.join(out_dir, rel_path) if rel_path != "." else out_dir
-            else:
-                output_subdir = out_dir
-            
+
+            # Use config to calculate where template output should be placed
+            output_subdir = self.config.output_subdir_for_template(template_dir, proj_root)
+
             outpath = builder.build_docs(context=ctx, out_dir=output_subdir, template_dir=template_dir, template_file=template_file, fmt=fmt)
             logging.debug(f"Documentation built at: {outpath} using format: {fmt} and template: {template_file} from path: {template_dir}")
             outpaths.append(outpath)
@@ -100,14 +95,14 @@ class PerseusService(metaclass=Singleton):
                             logging.debug(f"Parsed block: {b}")
                             self._validate_and_add_block(ctx, b)
 
-    def _scan_and_parse_templates(self, templates: set[tuple[str, str, str]], proj_dir: str, proj_root: str) -> None:
+    def _scan_and_parse_templates(self, templates: set[tuple[str, str, str]], proj_dir: str) -> None:
         logging.debug(f"Scanning for templates in directory: {proj_dir}")
         for dirpath, dirs, files in os.walk(proj_dir):
             for f in files:
                 if f.endswith(".pdoc"):
                     path = os.path.join(dirpath, f)
                     logging.debug(f"Found template file: {path}")
-                    templates.add((dirpath, f, proj_root))
+                    templates.add((dirpath, f, proj_dir))
 
     def _is_ignored(self, dirpath: str, d: str, ignore: set[str]) -> bool:
         """Check if a directory should be ignored."""
@@ -121,6 +116,6 @@ class PerseusService(metaclass=Singleton):
         # Enrich tickets with Jira data
         if block.tickets:
             block.tickets_enriched = self.jira_service.enrich_tickets(block.tickets)
-        
+
         logging.debug(f"Adding block to context: {block}")
         ctx.add_block(block)
