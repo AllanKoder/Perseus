@@ -11,6 +11,7 @@ from perseus.core import scanner, parser, builder
 from perseus.services.config_service import ConfigService
 from perseus.services.jira_service import JiraService
 from perseus.services.metaclasses import Singleton
+from perseus.constants import Constants
 
 class PerseusService(metaclass=Singleton):
     """
@@ -60,8 +61,8 @@ class PerseusService(metaclass=Singleton):
         # default template if none found
         if not templates:
             logging.debug("No templates found, using default template.")
-            default_template_dir = os.path.normpath(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "templates")))
-            templates = set([(default_template_dir, "default.pdoc", None)])
+            default_dir, default_file = Constants.get_default_template_pair()
+            templates = set([(default_dir, default_file, None)])
 
         outpaths: List[str] = []
         os.makedirs(out_dir, exist_ok=True)

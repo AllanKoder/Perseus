@@ -44,23 +44,23 @@ tickets:
 
 class IntegrationAdapter:
     """Manages external system integrations."""
-    
+
     def sync_rates_to_channels(self, property_id, rate_plan):
         """Push updated rates to all connected channels."""
         pass
-    
+
     def sync_inventory_to_channels(self, property_id, availability_data):
         """Update room availability across distribution channels."""
         pass
-    
+
     def import_ota_booking(self, channel_id, reservation_data):
         """Process incoming reservation from external channel."""
         pass
-    
+
     def verify_rate_parity(self, property_id, room_type):
         """Check pricing consistency across channels."""
         pass
-    
+
     def handle_channel_error(self, channel_id, error_type, retry_count):
         """Implement retry and failover logic."""
         pass

@@ -1,21 +1,33 @@
-import os
+from pathlib import Path
+from typing import Optional
 
 
-def resolve_absolute(root: str, path: str) -> str:
+def resolve_absolute(root: str, path: str) -> Optional[str]:
     """
     Resolve `path` relative to `root` and return an absolute, normalized path.
 
-    - If `path` is falsy, returns an empty string.
+    - If `path` is falsy, returns `None`.
     - If `path` is already absolute, returns its normalized absolute form.
     - Otherwise joins it with `root` and returns the normalized absolute path.
+
+    This uses `pathlib.Path.resolve(strict=False)` to normalize without
+    requiring the path to exist.
     """
     if not path:
-        return ""
+        return None
 
-    # Normalize and make root absolute first
-    root_abs = os.path.abspath(os.path.normpath(root))
+    root_path = Path(root)
+    p = Path(path)
 
-    if os.path.isabs(path):
-        return os.path.abspath(os.path.normpath(path))
+    # If path is not absolute, join with root
+    if not p.is_absolute():
+        p = root_path.joinpath(p)
 
-    return os.path.abspath(os.path.normpath(os.path.join(root_abs, path)))
+    # Normalize (do not require existence)
+    try:
+        resolved = p.resolve(strict=False)
+    except Exception:
+        # Fallback to absolute without resolving symlinks
+        resolved = p.absolute()
+
+    return str(resolved)

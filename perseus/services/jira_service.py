@@ -8,8 +8,9 @@ from typing import Dict, Optional
 from functools import lru_cache
 from jira import JIRA
 from perseus.services.config_service import ConfigService
+from perseus.services.metaclasses import Singleton
 
-class JiraService:
+class JiraService(metaclass=Singleton):
     """Fetches ticket data from Jira API with caching."""
 
     def __init__(self, config: ConfigService | None = None):

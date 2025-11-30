@@ -1,4 +1,6 @@
-## Perseus Generated Documentation
+## Default Perseus Generated Documentation
+
+Create your own .pdocs in your codebase to generate your own documentation!
 
 {% for id, block in blocks.items() %}
 ### {{ id }}

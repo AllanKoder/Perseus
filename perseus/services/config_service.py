@@ -50,11 +50,19 @@ class ConfigService(metaclass=Singleton):
 
             try:
                 with open(config_path, "r", encoding="utf-8") as fh:
-                    data = yaml.safe_load(fh) or {}
+                    data = yaml.safe_load(fh)
             except Exception:
-                raise RuntimeError(f"Specified config path could not be read: {config_path}")
+                raise IOError(f"Specified config path could not be read: {config_path}")
             break
 
-        config = ConfigData(**(data or {}))
-        config.root = self.root
+        # Ensure `root` from the CLI invocation overrides any value in the config file.
+        data_combined = dict(data)
+        data_combined["root"] = self.root
+
+        # Construct the validated ConfigData with the CLI-root applied (no post-construction mutation).
+        config = ConfigData(**data_combined)
+
+        # Validate config paths early and explicitly; let exceptions propagate
+        config.validate_paths()
+
         return config

@@ -37,7 +37,7 @@ def build_docs(
         out_file_name = f"{template_file.replace('.pdoc', '.json')}"
         path: str = os.path.join(out_dir, out_file_name)
         with open(path, "w", encoding="utf-8") as f:
-            json.dump({"blocks": context.model_dump(), "glossary": context.glossary}, f, indent=2)
+            json.dump(context.model_dump(), f, indent=2)
         return path
     else:
         raise ValueError(f"Unknown format: {fmt!r}")
