@@ -6,5 +6,5 @@ ignore_dirs:
 source_exts:
   - .py
 output: docs/build
-format: json
+format: md
 pdoc_ext: .pdoc

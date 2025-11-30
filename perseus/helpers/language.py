@@ -55,57 +55,63 @@ def strip_comment_prefixes(block: str, style: Style) -> str:
     lines = block.splitlines()
     cleaned = []
     for line in lines:
-        s = line.lstrip()
+        # Preserve leading indentation so YAML block scalars (|, >)
+        # remain correctly indented after stripping comment markers.
+        if line.strip() == "":
+            cleaned.append("")
+            continue
+
+        # number of leading spaces to preserve
+        leading_spaces = len(line) - len(line.lstrip(' '))
+        tail = line[leading_spaces:]
+
         # Accept either a Style enum or a raw string for backward compatibility
         if not isinstance(style, Style):
-            # try to coerce
             try:
                 style = Style(style)
             except Exception:
                 style = Style.UNKNOWN
 
         if style == Style.PYTHON:
-            # Remove leading '#' and a single space if present
-            if s.startswith("#"):
-                s = s[1:]
-                if s.startswith(" "):
-                    s = s[1:]
+            # Remove a leading '#' after indentation, preserve indentation
+            if tail.startswith("#"):
+                tail = tail[1:]
+                if tail.startswith(" "):
+                    tail = tail[1:]
         elif style == Style.C_LIKE:
-            # Remove leading '/*' or '*/' if a caller accidentally included them
-            if s.startswith("/*"):
-                s = s[2:]
-                if s.startswith(" "):
-                    s = s[1:]
-            if s.startswith("*/"):
-                s = s[2:]
-                if s.startswith(" "):
-                    s = s[1:]
-            # Remove leading '*' used in many block-comment styles
-            if s.startswith("*"):
-                s = s[1:]
-                if s.startswith(" "):
-                    s = s[1:]
-            # Line comments
-            if s.startswith("//"):
-                s = s[2:]
-                if s.startswith(" "):
-                    s = s[1:]
+            # Remove block comment markers or leading '*' used in many C-style
+            if tail.startswith("/*"):
+                tail = tail[2:]
+                if tail.startswith(" "):
+                    tail = tail[1:]
+            if tail.startswith("*/"):
+                tail = tail[2:]
+                if tail.startswith(" "):
+                    tail = tail[1:]
+            if tail.startswith("*"):
+                tail = tail[1:]
+                if tail.startswith(" "):
+                    tail = tail[1:]
+            if tail.startswith("//"):
+                tail = tail[2:]
+                if tail.startswith(" "):
+                    tail = tail[1:]
         else:
             # Best-effort: strip common single-line comment prefixes
-            if s.startswith("#"):
-                s = s[1:]
-                if s.startswith(" "):
-                    s = s[1:]
-            elif s.startswith("//"):
-                s = s[2:]
-                if s.startswith(" "):
-                    s = s[1:]
-            elif s.startswith("*"):
-                s = s[1:]
-                if s.startswith(" "):
-                    s = s[1:]
+            if tail.startswith("#"):
+                tail = tail[1:]
+                if tail.startswith(" "):
+                    tail = tail[1:]
+            elif tail.startswith("//"):
+                tail = tail[2:]
+                if tail.startswith(" "):
+                    tail = tail[1:]
+            elif tail.startswith("*"):
+                tail = tail[1:]
+                if tail.startswith(" "):
+                    tail = tail[1:]
 
-        cleaned.append(s)
+        cleaned.append(" " * leading_spaces + tail)
 
     # Trim leading/trailing blank lines
     while cleaned and cleaned[0].strip() == "":

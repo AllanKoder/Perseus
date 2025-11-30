@@ -2,11 +2,26 @@
 
 This module intentionally contains minimal logic: configuration and CLI
 """
+import logging
 import click
 from perseus.cli.perseus_cli import build
 from perseus.services.config_service import ConfigService
+from perseus.env import LOG_LEVEL
 import os
 
+
+# Initialize logging early so debug/info messages are visible even when
+# other modules or the environment may have already configured handlers.
+_lvl = logging.getLevelName(LOG_LEVEL)
+if isinstance(_lvl, str):
+    # Unknown names map to strings; fall back to INFO
+    _lvl = logging.INFO
+root_logger = logging.getLogger()
+if not root_logger.handlers:
+    logging.basicConfig(level=_lvl)
+else:
+    # If handlers already exist, ensure the root logger level allows DEBUG messages
+    root_logger.setLevel(_lvl)
 
 
 @click.group()
@@ -16,6 +31,7 @@ import os
 def cli(ctx, root, config):
     # Initialize config singleton and store in context object
     ConfigService(root, config)
+
 
 cli.add_command(build)
 
