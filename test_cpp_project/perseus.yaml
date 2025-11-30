@@ -1,0 +1,3 @@
+project_directories:
+  - src
+output_directory: docs

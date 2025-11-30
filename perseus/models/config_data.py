@@ -14,7 +14,7 @@ class ConfigData(BaseModel):
     config: str = Field(default="perseus.yaml")
     output: str = Field(default="docs/build")  # Output directory, relative to root unless absolute
     format: str = Field(default="md")
-    source_exts: List[str] = Field(default_factory=lambda: [".py"])
+    source_exts: List[str] = Field(default_factory=lambda: [""])
     pdoc_ext: str = Field(default=".pdoc")
     watch: bool = Field(default=False)
     # list of directory names (or top-level relative paths) to ignore during scans
@@ -110,7 +110,10 @@ class ConfigData(BaseModel):
 
         # Ensure template is within project root using Path.relative_to
         try:
-            rel = template_path.relative_to(proj_root_path)
+            # If a file path was provided, use its parent directory so the
+            # template filename itself does not become a folder in output.
+            candidate = template_path.parent if template_path.is_file() else template_path
+            rel = candidate.relative_to(proj_root_path)
         except Exception:
             # Template not in project root — if this is the packaged default
             # template extracted into a temp dir, treat it as intended and

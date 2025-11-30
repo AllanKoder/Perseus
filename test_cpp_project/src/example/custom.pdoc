@@ -1,0 +1,17 @@
+
+
+Blocks count: {{ blocks|length }}
+
+Raw blocks keys: {{ blocks.keys() }}
+
+{% for b in blocks.values() %}
+# {{ b.title }}
+
+_id_: `{{ b.id }}`
+
+{{ b.description }}
+
+
+---
+
+{% endfor %}

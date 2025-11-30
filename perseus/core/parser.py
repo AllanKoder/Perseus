@@ -7,32 +7,6 @@ from typing import List
 from perseus.helpers.language import strip_comment_prefixes, Style
 
 
-def extract_code_near(block_id: str, source_text: str, context_lines: int = 8) -> str:
-    """Naive extractor: find function/class with name block_id in source_text and return surrounding lines.
-    Falls back to returning an empty string if not found.
-    """
-    if not source_text:
-        return ""
-    # simple regex to find a def/class line containing the id
-    pattern = re.compile(r"^(.*(?:def|class)\s+" + re.escape(block_id) + r"\b.*)$", re.MULTILINE)
-    m = pattern.search(source_text)
-    if not m:
-        return ""
-    # get a window of lines; be conservative about including preceding lines
-    lines = source_text.splitlines()
-    # find line index of matched line
-    for idx, line in enumerate(lines):
-        if m.group(1).strip() == line.strip():
-            # Start at the def/class line itself. Include decorator lines immediately above it
-            s = idx
-            while s > 0 and lines[s - 1].lstrip().startswith("@"):
-                s -= 1
-            # End after a number of context lines to capture body; don't include arbitrary leading docstrings/YAML
-            e = min(len(lines), idx + context_lines)
-            return "\n".join(lines[s:e]) + "\n"
-    return ""
-
-
 def parse_blocks(yaml_blocks: List[str], code_text: str = None) -> List[PdocBlock]:
     parsed = []
     for text in yaml_blocks:
@@ -64,7 +38,5 @@ def parse_blocks(yaml_blocks: List[str], code_text: str = None) -> List[PdocBloc
             # skip invalid blocks
             continue
         block = PdocBlock(**data)
-        if block.code:
-            block.code_snippet = extract_code_near(block.id, code_text)
         parsed.append(block)
     return parsed

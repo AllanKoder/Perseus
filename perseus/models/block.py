@@ -13,8 +13,6 @@ class PdocBlock(BaseModel):
     tags: List[str] = Field(default_factory=list)
     tickets: List[str] = Field(default_factory=list)
     tickets_enriched: List[Dict[str, str]] = Field(default_factory=list)  # Runtime enriched data
-    # extras removed; additional fields should be declared in global config
-    code_snippet: str = ""
 
     @field_validator("tickets", mode="before")
     def normalize_tickets(cls, v):
@@ -46,8 +44,6 @@ class PdocBlock(BaseModel):
         # Keep compatibility with the previous to_dict structure: include 'code' key containing the snippet
         # Use Pydantic v2 model_dump for serialization
         base = self.model_dump(exclude={})
-        # move code_snippet into 'code' key for backward compatibility
-        base["code"] = base.pop("code_snippet", "")
         # extras are validated against global config; nothing to merge here
         return base
 
