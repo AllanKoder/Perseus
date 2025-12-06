@@ -1,4 +1,3 @@
-# Perseus
 
 A documentation extraction and generation system that converts structured comment blocks and narrative `.pdoc` templates into complete Markdown documentation. Perseus centralizes context, vocabulary, and narrative explanation across codebases, keeping documentation maintainable, contextual, and consistent.
 
@@ -7,6 +6,8 @@ A documentation extraction and generation system that converts structured commen
 ## Overview
 
 Perseus extracts structured `@pdoc` blocks from code comments, merges them with additional narrative documents, and compiles them into Markdown or JSON outputs using Jinja-style templating.
+
+![LogoPerseus](https://github.com/user-attachments/assets/c132daef-742a-49b6-9e5a-5e459d74aaa8)# Perseus
 
 Key design goals:
 
