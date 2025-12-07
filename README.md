@@ -153,10 +153,14 @@ uv pip install -r requirements.txt
 Run the demo:
 
 ```bash
-uv run perseus/main.py --config test_project/perseus.yaml build --format md
+uv run perseus/main.py --config test_projects/simple_python/perseus.yaml build --format md
+```
+or
+```bash
+uv run perseus/main.py --root test_projects/simple_python build --format md
 ```
 
-This will produce Markdown in `test_project/docs/build/output.md`.
+This will produce Markdown in `test_projects/simple_python/docs/build`.
 
 ## .env
 

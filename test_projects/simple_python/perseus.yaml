@@ -1,5 +1,5 @@
 projects:
-  - .
+  - src
 ignore_dirs:
   - __pycache__
   - docs

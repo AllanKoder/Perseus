@@ -20,8 +20,18 @@ class ConfigService(metaclass=Singleton):
     """
 
     def __init__(self, root: Optional[str] = None, config_file: Optional[str] = None):
-        self.root = root or "."
-        self.config_file = config_file
+        # If a config file is provided and root is not explicitly set,
+        # use the directory containing the config file as the root
+        if config_file and (not root or root == "."):
+            config_path = Path(config_file)
+            if not config_path.is_absolute():
+                config_path = (Path(".") / config_path).resolve()
+            self.root = str(config_path.parent)
+            # Convert config_file to just the filename since root now points to its directory
+            self.config_file = config_path.name
+        else:
+            self.root = root or "."
+            self.config_file = config_file
         self.config = self.load()
 
     def load(self) -> ConfigData:
@@ -61,6 +71,10 @@ class ConfigService(metaclass=Singleton):
         # Ensure `root` from the CLI invocation overrides any value in the config file.
         data_combined = dict(data)
         data_combined["root"] = self.root
+        
+        # Set the config file path to the actual file that was loaded
+        if config_path:
+            data_combined["config"] = file
 
         # Construct the validated ConfigData with the CLI-root applied (no post-construction mutation).
         config = ConfigData(**data_combined)

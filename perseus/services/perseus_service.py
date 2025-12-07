@@ -107,9 +107,13 @@ class PerseusService(metaclass=Singleton):
                     path = str(Path(dirpath) / f)
                     logging.debug(f"Scanning file: {path}")
                     for block_text in scanner.scan_file(path):
-                        for b in parser.parse_blocks([block_text]):
-                            logging.debug(f"Parsed block: {b}")
-                            self._validate_and_add_block(ctx, b)
+                        try:
+                            for b in parser.parse_blocks([block_text]):
+                                logging.debug(f"Parsed block: {b}")
+                                self._validate_and_add_block(ctx, b)
+                        except Exception as e:
+                            logging.error(f"Failed to parse block in file {path}: {e}")
+                            raise
 
     def _scan_and_parse_templates(self, templates: set[tuple[str, str, str]], proj_dir: str) -> None:
         logging.debug(f"Scanning for templates in directory: {proj_dir}")

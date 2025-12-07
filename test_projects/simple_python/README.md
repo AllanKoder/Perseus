@@ -14,10 +14,10 @@ This folder demonstrates how to use Perseus to extract and generate documentatio
 2. Run the build command from the project root:
 
 ```bash
-uv run perseus/main.py --root test_project/ build
+uv run perseus/main.py --root test_projects/simple_python build
 ```
 
-3. The generated documentation will appear in `test_project/docs/build/output.md`.
+3. The generated documentation will appear in `test_projects/simple_python/docs/build/output.md`.
 
 ### What to Expect
 

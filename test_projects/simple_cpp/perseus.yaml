@@ -1,3 +1,8 @@
-project_directories:
+projects:
   - src
-output_directory: docs
+output: docs
+format: md
+pdoc_ext: .pdoc
+source_exts:
+  - .cpp
+  - .h
