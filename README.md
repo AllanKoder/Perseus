@@ -7,7 +7,18 @@ A documentation extraction and generation system that converts structured commen
 
 Perseus extracts structured `@pdoc` blocks from code comments, merges them with additional narrative documents, and compiles them into Markdown or JSON outputs using Jinja-style templating.
 
-![LogoPerseus](https://github.com/user-attachments/assets/c132daef-742a-49b6-9e5a-5e459d74aaa8)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/c132daef-742a-49b6-9e5a-5e459d74aaa8" alt="Perseus Logo" width="150">
+</p>
+
+Demo Video: https://www.youtube.com/watch?v=JB6BY2yXOlQ
+
+Sample Generated Documentation:
+
+<img width="400" alt="image" src="https://github.com/user-attachments/assets/ac0230fd-dc17-4dfa-9727-76a366ee3710" />
+
+**View a sample project [here](https://github.com/AllanKoder/Perseus/tree/main/test_projects/simple_python)**
+
 
 # Perseus
 Key design goals:
